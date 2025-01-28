@@ -1,0 +1,137 @@
+/* Basic styling for the page */
+body {
+  font-family: 'Arial', sans-serif;
+  background: #f8f9fa;
+  position: relative;
+}
+
+/* Gradient heading style */
+h1.text-gradient {
+  background: linear-gradient(to right, #ff7e5f, #feb47b);
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 2.5rem;
+}
+
+/* Styling the input group */
+.input-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Task input and select elements */
+input, select {
+  font-size: 1.1rem;
+  border-radius: 8px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Add task button as a cube with smooth animation */
+.task-btn {
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background-color: #ff7e5f;
+  color: white;
+  border: none;
+  text-transform: uppercase;
+  position: fixed;
+  right: 0px;
+  bottom: 0px;
+  width: 100px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.task-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.3);
+  background-color: #ff5722;
+}
+
+.task-btn:focus {
+  outline: none;
+}
+
+.task-btn span {
+  font-size: 1rem;
+  text-align: center;
+  transition: color 0.2s ease;
+}
+
+.task-btn:hover span {
+  color: #fff;
+}
+
+/* Task list styling */
+.task-list {
+  margin-top: 30px;
+  padding-left: 0;
+}
+
+/* Task item animation */
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards, scaleUp 0.5s forwards;
+  transition: all 0.3s ease;
+}
+
+/* Fade in animation for tasks */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Scaling animation for tasks */
+@keyframes scaleUp {
+  from { transform: scale(0.5); }
+  to { transform: scale(1); }
+}
+
+/* Task color based on time of day */
+.morning {
+  background-color: #ffeb3b; /* Yellow for morning */
+  box-shadow: 0px 4px 10px rgba(255, 235, 59, 0.3);
+}
+
+.afternoon {
+  background-color: #ff8c00; /* Orange for afternoon */
+  box-shadow: 0px 4px 10px rgba(255, 140, 0, 0.3);
+}
+
+.evening {
+  background-color: #f44336; /* Red for evening */
+  box-shadow: 0px 4px 10px rgba(244, 67, 54, 0.3);
+}
+
+/* Styling for task priority labels */
+.priority-label {
+  font-weight: bold;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.priority-low {
+  background-color: #4caf50;
+  color: white;
+}
+
+.priority-medium {
+  background-color: #ff9800;
+  color: white;
+}
+
+.priority-high {
+  background-color: #f44336;
+  color: white
