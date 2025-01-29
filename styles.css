@@ -24,11 +24,11 @@ input, select {
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Ensure placeholder text is visible */
+
 input::placeholder {
-  color: #6c757d;  /* Choose a color that contrasts well */
-  opacity: 1; /* Ensure full opacity */
-  font-size: 1rem; /* Ensure the text size is appropriate */
+  color: #6c757d; 
+  opacity: 1; 
+  font-size: 1rem; 
 }
 
 .task-btn {
@@ -68,7 +68,7 @@ input::placeholder {
   animation: fadeIn 0.5s forwards, scaleUp 0.5s forwards;
 }
 
-/* Color classes for different times of day */
+
 .morning {
   background-color: #FFEB3B; /* Yellowish for morning */
 }
