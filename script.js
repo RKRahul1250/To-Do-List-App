@@ -3,10 +3,9 @@ document.getElementById('addTaskBtn').addEventListener('click', addTask);
 const today = new Date().toISOString().split('T')[0];
 document.getElementById('taskDate').setAttribute('min', today);
 
-// Load tasks from Local Storage when the page loads
 window.onload = () => {
-  const storedTasks = JSON.parse(localStorage.getItem('tasks')) || []; // Load saved tasks or an empty array if no tasks are stored
-  storedTasks.forEach(task => displayTask(task)); // Display saved tasks
+  const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  storedTasks.forEach(task => displayTask(task));
 };
 
 function addTask() {
@@ -24,12 +23,10 @@ function addTask() {
     const taskData = { task: taskText, date: taskDueDate, time: taskDueTime, priority: taskPriority };
     displayTask(taskData);
 
-    // Save task to Local Storage
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     tasks.push(taskData);
     localStorage.setItem('tasks', JSON.stringify(tasks));
 
-    // Clear input fields
     taskInput.value = taskDate.value = taskTime.value = '';
     document.getElementById('ampm').value = 'AM';
   } else {
@@ -40,7 +37,20 @@ function addTask() {
 function displayTask({ task, date, time, priority }) {
   const taskList = document.getElementById('taskList');
   const li = document.createElement('li');
-  li.className = `list-group-item ${getTimeOfDay(time)} ${priority.toLowerCase()}`;
+
+  // Determine the time of day based on the task time
+  const taskHour = parseInt(time.split(':')[0]);
+  let timeClass = '';
+
+  if (taskHour >= 6 && taskHour < 12) {
+    timeClass = 'morning';
+  } else if (taskHour >= 12 && taskHour < 18) {
+    timeClass = 'afternoon';
+  } else {
+    timeClass = 'evening';
+  }
+
+  li.className = `list-group-item ${priority.toLowerCase()} ${timeClass}`;
 
   const taskContent = document.createElement('span');
   taskContent.innerHTML = `${task} <small class="text-muted">(${date} at ${time})</small>`;
@@ -64,57 +74,30 @@ function createButton(text, className, onClick) {
   return btn;
 }
 
-function getTimeOfDay(time) {
-  const [hour, ampm] = time.split(':');
-  const hourInt = parseInt(hour) + (ampm === 'PM' && hour < 12 ? 12 : 0);
-  return hourInt >= 6 && hourInt < 12 ? 'morning' : hourInt < 18 ? 'afternoon' : 'evening';
-}
-
 function modifyTask(listItem, taskContent) {
   const [taskText, timeText] = taskContent.textContent.split('(');
   const [date, time] = timeText.replace(')', '').split(' at ');
 
   document.getElementById('taskInput').value = taskText.trim();
   document.getElementById('taskDate').value = date.trim();
-
-  const [timePart, ampm] = time.trim().split(' ');
-  document.getElementById('taskTime').value = formatTime(timePart, ampm);
-  document.getElementById('ampm').value = ampm;
   listItem.remove();
 
-  // Update Local Storage after modification
-  updateLocalStorage();
-}
-
-function deleteTask(listItem, task) {
-  listItem.remove();
-
-  // Remove the task from Local Storage
-  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-  const updatedTasks = tasks.filter(t => t.task !== task); // Remove task from the list
+  const tasks = JSON.parse(localStorage.getItem('tasks'));
+  const updatedTasks = tasks.filter(task => task.task !== taskText.trim());
   localStorage.setItem('tasks', JSON.stringify(updatedTasks));
 }
 
-function formatTime(time24, ampm) {
-  let [hour, minute] = time24.split(':');
-  if (ampm === 'PM' && hour < 12) hour = parseInt(hour) + 12;
-  if (ampm === 'AM' && hour === '12') hour = '00';
-  return `${hour}:${minute} ${ampm}`;
+function deleteTask(listItem, taskText) {
+  listItem.remove();
+  const tasks = JSON.parse(localStorage.getItem('tasks'));
+  const updatedTasks = tasks.filter(task => task.task !== taskText);
+  localStorage.setItem('tasks', JSON.stringify(updatedTasks));
 }
 
-function updateLocalStorage() {
-  const taskList = document.getElementById('taskList');
-  const tasks = [];
-  
-  taskList.querySelectorAll('.list-group-item').forEach(item => {
-    const taskContent = item.querySelector('span').textContent.trim();
-    const task = taskContent.split('(')[0].trim();
-    const date = taskContent.split('(')[1].split(' at ')[0].trim();
-    const time = taskContent.split('at ')[1].replace(')', '').trim();
-    const priority = item.querySelector('.priority-label').textContent.trim();
-    
-    tasks.push({ task, date, time, priority });
-  });
-
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+function formatTime(time, ampm) {
+  let [hours, minutes] = time.split(':');
+  hours = parseInt(hours);
+  if (ampm === 'PM' && hours < 12) hours += 12;
+  if (ampm === 'AM' && hours === 12) hours = 0;
+  return `${hours}:${minutes}`;
 }
